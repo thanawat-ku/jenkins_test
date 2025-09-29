@@ -6,13 +6,16 @@
 -- Generation Time: Sep 29, 2025 at 05:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
-
+            /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+            /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+            /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+            /*!40101 SET NAMES utf8mb4 */;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-use university;
+CREATE DATABASE IF NOT EXISTS university;
+USE university;
 
 CREATE TABLE `courses` (
   `course_code` char(8) NOT NULL,

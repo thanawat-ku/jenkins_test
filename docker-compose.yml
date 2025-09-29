@@ -1,34 +1,41 @@
 services:
-  php-apache-environment:
-    container_name: php-apache
+  web:
     build:
       dockerfile: Dockerfile
-    depends_on:
-      - db
+    ports:
+      - "80:80"
     volumes:
-      - ./html:/var/www/html/
-    ports:
-      - 80:80
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - "8081:80"
-    restart: always
-    environment:
-      PMA_HOST: db
+      - ./html:/var/www/html
     depends_on:
       - db
+    networks:
+      - app-network
+
   db:
-    container_name: db
-    image: mysql
-    volumes:
-      - ./init-db:/docker-entrypoint-initdb.d/
-    restart: always
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: MYSQL_DATABASE
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: university
       MYSQL_USER: university
       MYSQL_PASSWORD: university
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
   jenkins:
     image: jenkins/jenkins:lts # Use the official Jenkins LTS image
     privileged: true # Required for Docker-in-Docker functionality within Jenkins if needed
@@ -46,3 +53,7 @@ services:
 
 volumes:
   jenkins_home: # Define the named volume for Jenkins data
+  db_data:
+
+networks:
+  app-network:
